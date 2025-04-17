@@ -24,20 +24,19 @@
         #output {
             margin-top: 20px;
             text-align: left;
-            white-space: pre-wrap; /* Erlaubt Umbrüche */
-            word-break: break-all; /* alles umbrechen */
-            overflow-wrap: break-word; /* Alternative für ältere Browser */
+            white-space: pre-wrap; /* Zeilenumbrüche im Text beibehalten */
+            word-break: break-word; /* Lange Wörter umbrechen */
             background-color: #f9f9f9;
             padding: 10px;
             border: 1px solid #ddd;
             max-width: 100%; /* Begrenzung der Breite */
-            box-sizing: border-box; /* Paddings einbeziehen */
+            box-sizing: border-box; /* Innenabstände einbeziehen */
         }
     </style>
 </head>
 <body>
     <h1>NFC-Rohdaten Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und bereinigte Rohdaten anzuzeigen.</p>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und die bereinigten Rohdaten anzuzeigen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -59,7 +58,7 @@
 
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>NFC Mic:</p>";
+                    outputDiv.innerHTML = "<p>Bereinigte Rohdaten:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
