@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFC-Rohdaten Leser</title>
+    <title>NFC-Debug Leser</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,8 +32,8 @@
     </style>
 </head>
 <body>
-    <h1>NFC-Rohdaten Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und die Rohdaten ohne binäre Nullen anzuzeigen.</p>
+    <h1>NFC-Debug Leser</h1>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und die Debug-Informationen zu sehen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -54,28 +54,35 @@
                     return;
                 }
 
-                // EventListener für das Lesen und Entfernen von binären Nullen
+                // EventListener für das Debugging von Rohdaten
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>Bereinigte Rohdaten:</p>";
+                    outputDiv.innerHTML = "<p>Rohdaten-Debug:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
-                        // DataView in lesbaren Text decodieren
-                        const decoder = new TextDecoder();
-                        let rawText = decoder.decode(rawDataView);
+                        console.log("Raw Data (DataView):", rawDataView);
 
-                        // Entfernen von binären Nullen
-                        rawText = rawText.replace(/\0/g, "");
+                        // Überprüfen, ob Daten vorhanden sind
+                        if (rawDataView && rawDataView.byteLength > 0) {
+                            // DataView in lesbaren Text decodieren
+                            const decoder = new TextDecoder();
+                            let rawText = decoder.decode(rawDataView);
 
-                        // HTML-Tags escapen
-                        const escapedText = rawText
-                            .replace(/&/g, "&amp;")
-                            .replace(/</g, "&lt;")
-                            .replace(/>/g, "&gt;");
+                            // Entfernen von binären Nullen
+                            rawText = rawText.replace(/\0/g, "");
 
-                        // Bereinigten Text anzeigen
-                        outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
+                            // HTML-Tags escapen
+                            const escapedText = rawText
+                                .replace(/&/g, "&amp;")
+                                .replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;");
+
+                            // Bereinigten Text anzeigen
+                            outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
+                        } else {
+                            outputDiv.innerHTML += `<p>Keine lesbaren Daten im Datensatz gefunden.</p>`;
+                        }
                     }
                 });
             });
