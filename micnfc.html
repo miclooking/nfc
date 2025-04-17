@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web-NFC Leser</title>
+    <title>NFC-XML Leser</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,11 +21,19 @@
         button:hover {
             background-color: #0056b3;
         }
+        #output {
+            margin-top: 20px;
+            text-align: left;
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
-    <h1>Web-NFC Leser</h1>
-    <p>Drücke auf "Start", um NFC-Tags zu lesen.</p>
+    <h1>NFC-XML Leser</h1>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und den XML-Inhalt anzuzeigen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -46,16 +54,17 @@
                     return;
                 }
 
-                // EventListener zum Lesen von NDEF-Daten hinzufügen
+                // EventListener für das Lesen von XML-Daten
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-					outputDiv.innerHTML = "<p>Rohdaten:</p>";
+                    outputDiv.innerHTML = "<p>XML-Inhalt:</p>";
                     for (const record of message.records) {
                         if (record.recordType === "text") {
-						    const rawData = new TextDecoder().decode(record.data);
-                            outputDiv.innerHTML += `<pre>${rawData}</pre>`;
-						} else {
-                            outputDiv.innerHTML += "<p>Nicht-Text-NDEF-Datensatz gefunden.</p>";
+                            // XML-Inhalt auslesen und direkt anzeigen
+                            const xmlData = new TextDecoder().decode(record.data);
+                            outputDiv.innerHTML += `<pre>${xmlData}</pre>`;
+                        } else {
+                            outputDiv.innerHTML += `<p>Nicht-Text-Datensatz gefunden.</p>`;
                         }
                     }
                 });
