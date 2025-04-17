@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFC-XML Leser</title>
+    <title>NFC-Rohdaten Leser</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,8 +32,8 @@
     </style>
 </head>
 <body>
-    <h1>NFC-XML Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und den XML-Inhalt anzuzeigen.</p>
+    <h1>NFC-Rohdaten Leser</h1>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und die Rohdaten anzuzeigen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -54,18 +54,14 @@
                     return;
                 }
 
-                // EventListener für das Lesen von XML-Daten
+                // EventListener für das Lesen von Rohdaten
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>XML-Inhalt:</p>";
+                    outputDiv.innerHTML = "<p>Rohdaten:</p>";
                     for (const record of message.records) {
-                        if (record.recordType === "text") {
-                            // XML-Inhalt auslesen und direkt anzeigen
-                            const xmlData = new TextDecoder().decode(record.data);
-                            outputDiv.innerHTML += `<pre>${xmlData}</pre>`;
-                        } else {
-                            outputDiv.innerHTML += `<p>Nicht-Text-Datensatz gefunden.</p>`;
-                        }
+                        // Rohdaten direkt anzeigen
+                        const rawData = record.data;
+                        outputDiv.innerHTML += `<pre>${rawData}</pre>`;
                     }
                 });
             });
