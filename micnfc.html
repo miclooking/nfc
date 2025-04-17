@@ -24,21 +24,18 @@
         #output {
             margin-top: 20px;
             text-align: left;
-            white-space: break-spaces; /* Zeilenumbrüche und Leerzeichen beachten */
-            overflow-wrap: anywhere; /* Lange Wörter umbrechen */
-            word-break: break-word; /* Sicheren Umbruch durchsetzen */
-            max-width: 90vw; /* Passt sich an 90% der Viewport-Breite an */
+            white-space: pre-wrap;
             background-color: #f9f9f9;
             padding: 10px;
             border: 1px solid #ddd;
+            max-width: 100%;
             box-sizing: border-box;
-            overflow-x: hidden; /* Verhindert jegliches horizontales Scrollen */
         }
     </style>
 </head>
 <body>
     <h1>NFC-Rohdaten Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und bereinigte Rohdaten anzuzeigen.</p>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und bereinigte Rohdaten dynamisch umzubrechen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -60,7 +57,7 @@
 
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>Absolut:</p>";
+                    outputDiv.innerHTML = "<p>Math:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
@@ -73,7 +70,15 @@
                             .replace(/</g, "&lt;")
                             .replace(/>/g, "&gt;");
 
-                        outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
+                        // Dynamische Umbruch-Funktion
+                        const containerWidth = outputDiv.offsetWidth;
+                        const charPerLine = Math.floor(containerWidth / 7); // Geschätzte Zeichenanzahl pro Zeile
+                        const formattedText = escapedText.replace(
+                            new RegExp(`(.{${charPerLine}})`, "g"),
+                            "$1\n"
+                        );
+
+                        outputDiv.innerHTML += `<pre>${formattedText}</pre>`;
                     }
                 });
             });
