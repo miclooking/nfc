@@ -24,21 +24,21 @@
         #output {
             margin-top: 20px;
             text-align: left;
-            white-space: normal; /* Normale Textdarstellung */
-            word-break: break-word; /* Lange Wörter umbrechen */
+            white-space: pre-wrap; /* Erlaubt Umbrüche */
+            word-wrap: break-word; /* Lange Zeichenketten umbrechen */
+            overflow-wrap: break-word; /* Alternative für ältere Browser */
             background-color: #f9f9f9;
             padding: 10px;
             border: 1px solid #ddd;
-            width: 100%; /* Vollständig responsive */
-            max-width: 100%; /* Displaybreite begrenzen */
-            box-sizing: border-box; /* Innenabstände einbeziehen */
-            overflow-wrap: break-word; /* Zusätzlicher Schutz */
+            max-width: 100%; /* Begrenzung der Breite */
+            box-sizing: border-box; /* Paddings einbeziehen */
+            overflow-x: auto; /* Horizontal scrollen bei extrem langen Inhalten */
         }
     </style>
 </head>
 <body>
     <h1>NFC-Rohdaten Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und die bereinigten Rohdaten anzuzeigen.</p>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und bereinigte Rohdaten anzuzeigen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -60,15 +60,14 @@
 
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>Bereinigte Rohdaten:</p>";
+                    outputDiv.innerHTML = "<p>NFC:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
                         const decoder = new TextDecoder();
                         let rawText = decoder.decode(rawDataView);
 
-                        rawText = rawText.replace(/\0/g, "");
-
+                        rawText = rawText.replace(/\0/g, ""); // Nullzeichen entfernen
                         const escapedText = rawText
                             .replace(/&/g, "&amp;")
                             .replace(/</g, "&lt;")
