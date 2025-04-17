@@ -52,9 +52,9 @@
 					outputDiv.innerHTML = "<p>Rohdaten:</p>";
                     for (const record of message.records) {
                         if (record.recordType === "text") {
-                            const rawData = record.data;
-                            outputDiv.innerHTML += `<pre>${rawData}}</pre>`;
-                        } else {
+						    const rawData = new TextDecoder().decode(record.data);
+                            outputDiv.innerHTML += `<pre>${rawData}</pre>`;
+						} else {
                             outputDiv.innerHTML += "<p>Nicht-Text-NDEF-Datensatz gefunden.</p>";
                         }
                     }
