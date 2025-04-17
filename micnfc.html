@@ -57,16 +57,22 @@
                 // EventListener für das Lesen von Rohdaten
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>NFC Rohdaten:</p>";
+                    outputDiv.innerHTML = "<p>Rohdaten:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
-                        // DataView in lesbare Zeichenkette konvertieren
+                        // DataView in lesbaren Text decodieren
                         const decoder = new TextDecoder();
                         const rawText = decoder.decode(rawDataView);
 
-                        // Rohtext anzeigen
-                        outputDiv.innerHTML += `<pre>${rawText}</pre>`;
+                        // HTML-Tags escapen
+                        const escapedText = rawText
+                            .replace(/&/g, "&amp;")  // Ersetze &
+                            .replace(/</g, "&lt;")   // Ersetze <
+                            .replace(/>/g, "&gt;");  // Ersetze >
+
+                        // Escapeten Text anzeigen
+                        outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
                     }
                 });
             });
