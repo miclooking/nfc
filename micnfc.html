@@ -51,9 +51,8 @@
                     const message = event.message;
                     for (const record of message.records) {
                         if (record.recordType === "text") {
-                            const textDecoder = new TextDecoder(record.encoding);
-                            const decodedText = textDecoder.decode(record.data);
-                            outputDiv.innerHTML += `<p>Gelesener Text: ${decodedText}</p>`;
+                            const rawData = record.data;
+                            outputDiv.innerHTML += `<p>${rawData}</p>`;
                         } else {
                             outputDiv.innerHTML += "<p>Nicht-Text-NDEF-Datensatz gefunden.</p>";
                         }
