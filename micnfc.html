@@ -25,7 +25,7 @@
             margin-top: 20px;
             text-align: left;
             white-space: pre-wrap; /* Erlaubt Umbrüche */
-            word-wrap: break-word; /* Lange Zeichenketten umbrechen */
+            word-break: break-all; /* alles umbrechen */
             overflow-wrap: break-word; /* Alternative für ältere Browser */
             background-color: #f9f9f9;
             padding: 10px;
@@ -60,7 +60,7 @@
 
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>NFC:</p>";
+                    outputDiv.innerHTML = "<p>NFC Text:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
