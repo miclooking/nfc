@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFC-Debug Leser</title>
+    <title>NFC-Rohdaten Leser</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,16 +24,20 @@
         #output {
             margin-top: 20px;
             text-align: left;
-            white-space: pre-wrap;
+            white-space: pre-wrap; /* Zeilenumbrüche im Text beibehalten */
+            word-wrap: break-word; /* Lange Wörter umbrechen */
+            overflow-wrap: break-word; /* Alternative für ältere Browser */
             background-color: #f9f9f9;
             padding: 10px;
             border: 1px solid #ddd;
+            max-width: 100%; /* Begrenzung auf die Breite des Displays */
+            box-sizing: border-box; /* Innenabstände einbeziehen */
         }
     </style>
 </head>
 <body>
-    <h1>NFC-Debug Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und die Debug-Informationen zu sehen.</p>
+    <h1>NFC-Rohdaten Leser</h1>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und die bereinigten Rohdaten anzuzeigen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -54,35 +58,28 @@
                     return;
                 }
 
-                // EventListener für das Debugging von Rohdaten
+                // EventListener für das Lesen und Entfernen von binären Nullen
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>Rohdaten-Debug:</p>";
+                    outputDiv.innerHTML = "<p>NFC Daten:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
-                        console.log("Raw Data (DataView):", rawDataView);
+                        // DataView in lesbaren Text decodieren
+                        const decoder = new TextDecoder();
+                        let rawText = decoder.decode(rawDataView);
 
-                        // Überprüfen, ob Daten vorhanden sind
-                        if (rawDataView && rawDataView.byteLength > 0) {
-                            // DataView in lesbaren Text decodieren
-                            const decoder = new TextDecoder();
-                            let rawText = decoder.decode(rawDataView);
+                        // Entfernen von binären Nullen
+                        rawText = rawText.replace(/\0/g, "");
 
-                            // Entfernen von binären Nullen
-                            rawText = rawText.replace(/\0/g, "");
+                        // HTML-Tags escapen
+                        const escapedText = rawText
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;");
 
-                            // HTML-Tags escapen
-                            const escapedText = rawText
-                                .replace(/&/g, "&amp;")
-                                .replace(/</g, "&lt;")
-                                .replace(/>/g, "&gt;");
-
-                            // Bereinigten Text anzeigen
-                            outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
-                        } else {
-                            outputDiv.innerHTML += `<p>Keine lesbaren Daten im Datensatz gefunden.</p>`;
-                        }
+                        // Bereinigten Text anzeigen
+                        outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
                     }
                 });
             });
