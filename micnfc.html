@@ -24,14 +24,15 @@
         #output {
             margin-top: 20px;
             text-align: left;
-            white-space: pre-wrap; /* Zeilenumbrüche im Text beibehalten */
-            word-wrap: break-word; /* Lange Wörter umbrechen */
-            overflow-wrap: break-word; /* Alternative für ältere Browser */
+            white-space: normal; /* Normale Textdarstellung */
+            word-break: break-word; /* Lange Wörter umbrechen */
             background-color: #f9f9f9;
             padding: 10px;
             border: 1px solid #ddd;
-            max-width: 100%; /* Begrenzung auf die Breite des Displays */
+            width: 100%; /* Vollständig responsive */
+            max-width: 100%; /* Displaybreite begrenzen */
             box-sizing: border-box; /* Innenabstände einbeziehen */
+            overflow-wrap: break-word; /* Zusätzlicher Schutz */
         }
     </style>
 </head>
@@ -42,7 +43,6 @@
     <div id="output"></div>
 
     <script>
-        // Prüfen, ob Web-NFC unterstützt wird
         if ('NDEFReader' in window) {
             const ndef = new NDEFReader();
             const outputDiv = document.getElementById("output");
@@ -58,27 +58,22 @@
                     return;
                 }
 
-                // EventListener für das Lesen und Entfernen von binären Nullen
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>NFC Daten:</p>";
+                    outputDiv.innerHTML = "<p>Bereinigte Rohdaten:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
-                        // DataView in lesbaren Text decodieren
                         const decoder = new TextDecoder();
                         let rawText = decoder.decode(rawDataView);
 
-                        // Entfernen von binären Nullen
                         rawText = rawText.replace(/\0/g, "");
 
-                        // HTML-Tags escapen
                         const escapedText = rawText
                             .replace(/&/g, "&amp;")
                             .replace(/</g, "&lt;")
                             .replace(/>/g, "&gt;");
 
-                        // Bereinigten Text anzeigen
                         outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
                     }
                 });
