@@ -52,9 +52,9 @@
                     for (const record of message.records) {
                         if (record.recordType === "text") {
                             const rawData = record.data;
-                            outputDiv.innerHTML += `<pre>${JSON.stringify(rawData, null, 2)}</pre>`;
+                            outputDiv.innerHTML = `<pre>${JSON.stringify(rawData, null, 2)}</pre>`;
                         } else {
-                            outputDiv.innerHTML += "<p>Nicht-Text-NDEF-Datensatz gefunden.</p>";
+                            outputDiv.innerHTML = "<p>Nicht-Text-NDEF-Datensatz gefunden.</p>";
                         }
                     }
                 });
