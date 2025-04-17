@@ -33,7 +33,7 @@
 </head>
 <body>
     <h1>NFC-Rohdaten Leser</h1>
-    <p>Klicke auf "Start", um NFC-Tags auszulesen und die Rohdaten anzuzeigen.</p>
+    <p>Klicke auf "Start", um NFC-Tags auszulesen und die Rohdaten ohne binäre Nullen anzuzeigen.</p>
     <button id="startButton">Start</button>
     <div id="output"></div>
 
@@ -54,24 +54,27 @@
                     return;
                 }
 
-                // EventListener für das Lesen von Rohdaten
+                // EventListener für das Lesen und Entfernen von binären Nullen
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>Rohdaten:</p>";
+                    outputDiv.innerHTML = "<p>Bereinigte Rohdaten:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
                         // DataView in lesbaren Text decodieren
                         const decoder = new TextDecoder();
-                        const rawText = decoder.decode(rawDataView);
+                        let rawText = decoder.decode(rawDataView);
+
+                        // Entfernen von binären Nullen
+                        rawText = rawText.replace(/\0/g, "");
 
                         // HTML-Tags escapen
                         const escapedText = rawText
-                            .replace(/&/g, "&amp;")  // Ersetze &
-                            .replace(/</g, "&lt;")   // Ersetze <
-                            .replace(/>/g, "&gt;");  // Ersetze >
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;");
 
-                        // Escapeten Text anzeigen
+                        // Bereinigten Text anzeigen
                         outputDiv.innerHTML += `<pre>${escapedText}</pre>`;
                     }
                 });
