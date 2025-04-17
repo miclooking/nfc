@@ -57,7 +57,7 @@
 
                 ndef.addEventListener("reading", (event) => {
                     const message = event.message;
-                    outputDiv.innerHTML = "<p>Umbruch:</p>";
+                    outputDiv.innerHTML = "<p>NFC-Daten:</p>";
                     for (const record of message.records) {
                         const rawDataView = record.data;
 
@@ -67,8 +67,8 @@
                         // Nullzeichen entfernen
                         rawText = rawText.replace(/\0/g, "");
 
-                        // Erzwungene Umbrüche einfügen (z. B. nach 50 Zeichen)
-                        const formattedText = rawText.replace(/(.{50})/g, "$1\n");
+                        // Erzwungene Umbrüche einfügen (z. B. nach 40 Zeichen)
+                        const formattedText = rawText.replace(/(.{40})/g, "$1\n");
 
                         // HTML-Tags escapen
                         const escapedText = formattedText
